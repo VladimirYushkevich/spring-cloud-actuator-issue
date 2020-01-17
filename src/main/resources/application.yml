@@ -1,0 +1,32 @@
+server.port: 8080
+management:
+  health:
+    binders:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: bindings
+spring:
+  application:
+    name: foo-streamer
+  kafka:
+    consumer:
+      group-id: foo-streamer
+  cloud:
+    function:
+      definition: process;reduce
+    stream:
+      bindings:
+        process-out-0:
+          destination: foo-sink
+        process-in-0:
+          destination: foo-processor
+        reduce-in-0:
+          destination: foo-sink
+      kafka:
+        streams:
+          binder:
+            applicationId: foos-kafka-streams
+            configuration:
+              commit.interval.ms: 1000
